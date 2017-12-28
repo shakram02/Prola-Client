@@ -6,7 +6,9 @@ import android.content.Context
 import android.content.Intent
 import android.net.wifi.WifiManager
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.Toast
 import butterknife.BindView
 import butterknife.ButterKnife
@@ -24,9 +26,24 @@ class MainActivity : Activity() {
 
     private val sender: CodeSender = CodeSender(TCP_PORT, UDP_PORT, 5000)
 
+    class Disconnected : BaseState()
+    class Connected : BaseState()
+    class PreConnect : BaseState()
+
+
+    class Disconnect : BaseEvent()
+    class Error : BaseEvent()
+    class ReqConnect : BaseEvent()
+    class Connect : BaseEvent()
+    class Scan : BaseEvent()
+
+    private lateinit var scannedVal: String
+    private lateinit var scanMachine: StateMachine
+
     @BindView(R.id.connect_button) lateinit var connectButton: Button
     @BindView(R.id.disconnect_button) lateinit var disconnectButton: Button
     @BindView(R.id.scan_button) lateinit var scanButton: Button
+    @BindView(R.id.connect_spinner) lateinit var connectionSpinner: ProgressBar
 
     companion object {
         private const val TCP_PORT = 60111
@@ -42,10 +59,22 @@ class MainActivity : Activity() {
 
         ButterKnife.bind(this)
 
+
+        scanMachine = buildScanMachine()
+        sender.onConnected += { scanMachine.acceptEvent(Connect()) }
+        sender.onSent += { v -> makeToast("Sent " + v) }
+        sender.onError += { e ->
+            // Whenever an error occurs, change state
+            scanMachine.acceptEvent(Error())
+            makeToast(e)
+        }
         scanMachine.initialize()
+
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (data == null) return    // Scan cancelled
+
         val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
         if (result == null) {
             super.onActivityResult(requestCode, resultCode, data)
@@ -53,7 +82,6 @@ class MainActivity : Activity() {
         }
 
         if (result.contents != null) {
-            Toast.makeText(this, result.contents, Toast.LENGTH_SHORT).show()
             scannedVal = result.contents
             scanMachine.acceptEvent(Scan())
         }
@@ -71,51 +99,60 @@ class MainActivity : Activity() {
         if (!wifiManager.isWifiEnabled) {
             showToast(this, "Couldn't connect, please enable WiFi")
         } else {
-            scanMachine.acceptEvent(Connect())
+            scanMachine.acceptEvent(ReqConnect())
         }
     }
 
     @OnClick(R.id.disconnect_button)
     fun disconnect() {
         scanMachine.acceptEvent(Disconnect())
-
     }
 
-    class Disconnect : BaseEvent()
-    class Disconnected : BaseState()
-    class Connect : BaseEvent()
-    class Connected : BaseState()
-    class Scan : BaseEvent()
+    private fun makeToast(s: String) {
+        runOnUiThread { Toast.makeText(this, s, Toast.LENGTH_SHORT).show() }
+    }
 
-    private lateinit var scannedVal: String
-    private val scanMachine = StateMachine.buildStateMachine(Disconnected()) {
-        state(Disconnected()) {
-            action {
-                disconnectButton.isEnabled = false
-                scanButton.isEnabled = false
-                connectButton.isEnabled = true
-            }
-            edge(Connect(), Connected()) {
+    private fun buildScanMachine(): StateMachine {
+        return StateMachine.buildStateMachine(Disconnected()) {
+            state(Disconnected()) {
                 action {
-                    sender.start()
+                    disconnectButton.isEnabled = false
+                    scanButton.isEnabled = false
+                    connectButton.isEnabled = true
+                }
+
+                edge(ReqConnect(), PreConnect()) {
+                    action {
+                        sender.connect()
+                        // Show spin waiter
+                        connectButton.isEnabled = false
+                        connectionSpinner.visibility = View.VISIBLE
+                    }
                 }
             }
-        }
-        state(Connected()) {
-            action {
-                disconnectButton.isEnabled = true
-                scanButton.isEnabled = true
-                connectButton.isEnabled = false
-            }
+            state(PreConnect()) {
 
-            edge(Disconnect(), Disconnected()) {
-                action {
-                    sender.close()
+                edge(Error(), Disconnected()) {
+                    action {
+                        sender.close()
+                        connectionSpinner.visibility = View.GONE
+                    }
                 }
-            }
+                edge(Connect(), Connected()) {
+                    action {
+                        // Stop spin waiter also
+                        disconnectButton.isEnabled = true
+                        scanButton.isEnabled = true
+                        connectButton.isEnabled = false
+                        connectionSpinner.visibility = View.GONE
+                    }
+                }
 
-            edge(Scan(), Connected()) {
-                action { sender.send(scannedVal) }
+            }
+            state(Connected()) {
+                edge(Disconnect(), Disconnected()) { action { sender.close() } }
+                edge(Error(), Disconnected()) { action { sender.close() } }
+                edge(Scan(), Connected()) { action { sender.send(scannedVal) } }
             }
         }
     }
