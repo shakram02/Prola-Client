@@ -999,7 +999,7 @@ int attr sspPrefix 0x010103e4
 int attr stackFromBottom 0x010100fd
 int attr stackViewStyle 0x0101043e
 int attr starStyle 0x01010082
-int attr start 0x010104db
+int attr connect 0x010104db
 int attr startColor 0x0101019d
 int attr startDelay 0x010103e2
 int attr startOffset 0x010101be
