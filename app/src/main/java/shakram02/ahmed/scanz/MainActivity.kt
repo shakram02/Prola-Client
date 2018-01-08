@@ -39,8 +39,7 @@ class MainActivity : FragmentActivity(), ScanFragment.OnBarcodeScanListener {
     private lateinit var scanMachine: StateMachine
     private lateinit var scanFragment: ScanFragment
 
-    @BindView(R.id.connect_button) lateinit var connectButton: Button
-    @BindView(R.id.disconnect_button) lateinit var disconnectButton: Button
+    @BindView(R.id.connection_button) lateinit var connectionButton: Button
     @BindView(R.id.connect_spinner) lateinit var connectionSpinner: ProgressBar
 
     companion object {
@@ -80,8 +79,16 @@ class MainActivity : FragmentActivity(), ScanFragment.OnBarcodeScanListener {
         scanMachine.acceptEvent(Scan())
     }
 
-    @OnClick(R.id.connect_button)
-    fun connectInternet() {
+    @OnClick(R.id.connection_button)
+    fun onConnectionButtonClicked() {
+        if (connectionButton.text == getString(R.string.disconnect_button_text)) {
+            disconnect()
+        } else {
+            connect()
+        }
+    }
+
+    private fun connect() {
         if (!wifiManager.isWifiEnabled) {
             showToast(this, "Couldn't connect, please enable WiFi")
         } else {
@@ -89,8 +96,7 @@ class MainActivity : FragmentActivity(), ScanFragment.OnBarcodeScanListener {
         }
     }
 
-    @OnClick(R.id.disconnect_button)
-    fun disconnect() {
+    private fun disconnect() {
         scanMachine.acceptEvent(Disconnect())
     }
 
@@ -103,9 +109,9 @@ class MainActivity : FragmentActivity(), ScanFragment.OnBarcodeScanListener {
             state(Disconnected()) {
                 action {
                     runOnUiThread {
-                        disconnectButton.isEnabled = false
+                        connectionButton.text = getString(R.string.connect_button_text)
+                        connectionButton.isEnabled = true
                         scanFragment.disableScan()
-                        connectButton.isEnabled = true
                     }
                 }
 
@@ -113,8 +119,8 @@ class MainActivity : FragmentActivity(), ScanFragment.OnBarcodeScanListener {
                     action {
                         sender.connect()
                         runOnUiThread {
-                            // Show spin waiter
-                            connectButton.isEnabled = false
+                            // Show spin waiter, and disable connection button
+                            connectionButton.isEnabled = false
                             connectionSpinner.visibility = View.VISIBLE
                         }
                     }
@@ -133,9 +139,9 @@ class MainActivity : FragmentActivity(), ScanFragment.OnBarcodeScanListener {
                     action {
                         runOnUiThread {
                             // Stop spin waiter also
-                            disconnectButton.isEnabled = true
                             scanFragment.enableScan()
-                            connectButton.isEnabled = false
+                            connectionButton.text = getString(R.string.disconnect_button_text)
+                            connectionButton.isEnabled = true
                             connectionSpinner.visibility = View.GONE
                         }
                     }
