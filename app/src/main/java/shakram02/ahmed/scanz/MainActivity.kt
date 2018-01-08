@@ -1,11 +1,11 @@
 package shakram02.ahmed.scanz
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
-import android.content.Intent
 import android.net.wifi.WifiManager
 import android.os.Bundle
+import android.support.v4.app.FragmentActivity
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
@@ -13,14 +13,12 @@ import android.widget.Toast
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
-import com.google.zxing.client.android.Intents
-import com.google.zxing.integration.android.IntentIntegrator
 import fsm.BaseEvent
 import fsm.BaseState
 import fsm.StateMachine
 
 
-class MainActivity : Activity() {
+class MainActivity : FragmentActivity(), ScanFragment.OnBarcodeScanListener {
     private lateinit var wifiManager: WifiManager
     private lateinit var wifiDialog: AlertDialog
 
@@ -39,10 +37,10 @@ class MainActivity : Activity() {
 
     private lateinit var scannedVal: String
     private lateinit var scanMachine: StateMachine
+    private lateinit var scanFragment: ScanFragment
 
     @BindView(R.id.connect_button) lateinit var connectButton: Button
     @BindView(R.id.disconnect_button) lateinit var disconnectButton: Button
-    @BindView(R.id.scan_button) lateinit var scanButton: Button
     @BindView(R.id.connect_spinner) lateinit var connectionSpinner: ProgressBar
 
     companion object {
@@ -58,7 +56,7 @@ class MainActivity : Activity() {
         wifiDialog = createWifiDialog(this, wifiManager)
 
         ButterKnife.bind(this)
-
+        scanFragment = supportFragmentManager.findFragmentById(R.id.scan_fragment) as ScanFragment
 
         scanMachine = buildScanMachine()
         sender.onConnected += { scanMachine.acceptEvent(Connect()) }
@@ -72,26 +70,14 @@ class MainActivity : Activity() {
 
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (data == null) return    // Scan cancelled
 
-        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
-        if (result == null) {
-            super.onActivityResult(requestCode, resultCode, data)
-            return
+    override fun onBarcodeScan(barcode: String) {
+        if (BuildConfig.DEBUG) {
+            Log.i("BarcodeScanner", "Scanned $barcode")
         }
 
-        if (result.contents != null) {
-            scannedVal = result.contents
-            scanMachine.acceptEvent(Scan())
-        }
-    }
-
-    @OnClick(R.id.scan_button)
-    fun scanCode() {
-        val integrator = IntentIntegrator(this)
-        integrator.addExtra(Intents.Scan.ONE_D_MODE, true)
-        integrator.initiateScan()
+        scannedVal = barcode
+        scanMachine.acceptEvent(Scan())
     }
 
     @OnClick(R.id.connect_button)
@@ -116,17 +102,21 @@ class MainActivity : Activity() {
         return StateMachine.buildStateMachine(Disconnected()) {
             state(Disconnected()) {
                 action {
-                    disconnectButton.isEnabled = false
-                    scanButton.isEnabled = false
-                    connectButton.isEnabled = true
+                    runOnUiThread {
+                        disconnectButton.isEnabled = false
+                        scanFragment.disableScan()
+                        connectButton.isEnabled = true
+                    }
                 }
 
                 edge(ReqConnect(), PreConnect()) {
                     action {
                         sender.connect()
-                        // Show spin waiter
-                        connectButton.isEnabled = false
-                        connectionSpinner.visibility = View.VISIBLE
+                        runOnUiThread {
+                            // Show spin waiter
+                            connectButton.isEnabled = false
+                            connectionSpinner.visibility = View.VISIBLE
+                        }
                     }
                 }
             }
@@ -135,16 +125,19 @@ class MainActivity : Activity() {
                 edge(Error(), Disconnected()) {
                     action {
                         sender.close()
-                        connectionSpinner.visibility = View.GONE
+                        runOnUiThread { connectionSpinner.visibility = View.GONE }
+
                     }
                 }
                 edge(Connect(), Connected()) {
                     action {
-                        // Stop spin waiter also
-                        disconnectButton.isEnabled = true
-                        scanButton.isEnabled = true
-                        connectButton.isEnabled = false
-                        connectionSpinner.visibility = View.GONE
+                        runOnUiThread {
+                            // Stop spin waiter also
+                            disconnectButton.isEnabled = true
+                            scanFragment.enableScan()
+                            connectButton.isEnabled = false
+                            connectionSpinner.visibility = View.GONE
+                        }
                     }
                 }
 
