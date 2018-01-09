@@ -55,6 +55,7 @@ class ScanFragment : Fragment() {
     @OnClick(R.id.scan_frag_button)
     fun onScanButtonClick() {
         val integrator = FragmentIntentIntegrator(this)
+        integrator.captureActivity = BarcodeScanActivity::class.java
         integrator.addExtra(Intents.Scan.ONE_D_MODE, true)
         integrator.initiateScan()
     }

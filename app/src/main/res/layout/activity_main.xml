@@ -62,4 +62,5 @@
         tools:layout="@layout/fragment_capture">
 
     </fragment>
+
 </android.support.constraint.ConstraintLayout>
