@@ -1,4 +1,4 @@
-package shakram02.ahmed.scanz.fsm
+package shakram02.ahmed.prola.fsm
 
 import fsm.BaseEvent
 import fsm.BaseState

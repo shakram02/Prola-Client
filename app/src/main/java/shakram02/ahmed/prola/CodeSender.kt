@@ -1,8 +1,8 @@
-package shakram02.ahmed.scanz
+package shakram02.ahmed.prola
 
 import android.util.Log
 import com.esotericsoftware.kryonet.Client
-import shakram02.ahmed.scanz.utils.Event
+import shakram02.ahmed.prola.utils.Event
 import java.io.IOException
 import java.net.InetAddress
 import java.util.concurrent.LinkedBlockingQueue

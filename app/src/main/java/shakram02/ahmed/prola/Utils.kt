@@ -1,4 +1,4 @@
-package shakram02.ahmed.scanz
+package shakram02.ahmed.prola
 
 import android.app.AlertDialog
 import android.content.Context

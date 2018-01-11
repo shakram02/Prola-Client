@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="shakram02.ahmed.scanz.MainActivity">
+    tools:context="shakram02.ahmed.prola.MainActivity">
 
     <Button
         android:id="@+id/connection_button"
@@ -48,7 +48,7 @@
 
     <fragment
         android:id="@+id/scan_fragment"
-        class="shakram02.ahmed.scanz.ScanFragment"
+        class="shakram02.ahmed.prola.ScanFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="8dp"

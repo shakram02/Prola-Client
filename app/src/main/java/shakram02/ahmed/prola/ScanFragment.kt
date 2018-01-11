@@ -1,4 +1,4 @@
-package shakram02.ahmed.scanz
+package shakram02.ahmed.prola
 
 import android.content.Context
 import android.content.Intent

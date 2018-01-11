@@ -1,4 +1,4 @@
-package shakram02.ahmed.scanz
+package shakram02.ahmed.prola
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4

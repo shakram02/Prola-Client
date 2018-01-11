@@ -1,6 +1,6 @@
 package fsm
 
-import shakram02.ahmed.scanz.fsm.Edge
+import shakram02.ahmed.prola.fsm.Edge
 
 /**
  *
@@ -42,7 +42,7 @@ class State(val name: BaseState) {
     }
 
     /**
-     * Get the appropriate shakram02.ahmed.scanz.fsm.Edge for the Event
+     * Get the appropriate [Edge] for the [BaseEvent]
      */
     fun getEdgeForEvent(event: BaseEvent): Edge {
         try {

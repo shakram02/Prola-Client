@@ -1,4 +1,4 @@
-package shakram02.ahmed.scanz
+package shakram02.ahmed.prola
 
 import android.app.Activity
 import android.content.pm.PackageManager
