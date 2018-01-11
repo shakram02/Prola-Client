@@ -73,7 +73,7 @@ class CodeSender(private val tcpPort: Int, private val udpPort: Int, private val
         if (hostName == null) return false
 
         return try {
-            client.connect(timeoutMillis, hostName, tcpPort, udpPort)
+            client.connect(timeoutMillis, hostName, tcpPort)
             true
         } catch (e: IOException) {
             onError(e.message!!)
