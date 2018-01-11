@@ -7,8 +7,8 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "shakram02.ahmed.scanz"
-        minSdkVersion 19
+        applicationId 'shakram02.ahmed.prola'
+        minSdkVersion 21
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -24,6 +24,8 @@ android {
         targetCompatibility 1.8
         sourceCompatibility 1.8
     }
+    productFlavors {
+    }
 }
 
 dependencies {
@@ -37,6 +39,8 @@ dependencies {
     implementation files('libs/kryonet-2.21-all.jar')
     compile 'com.jakewharton:butterknife:8.8.1'
     kapt 'com.jakewharton:butterknife-compiler:8.8.1'
-    compile 'com.journeyapps:zxing-android-embedded:3.5.0'
-    compile 'com.android.support:appcompat-v7:26.1.0'   // Version 23+ is required
+    implementation 'com.journeyapps:zxing-android-embedded:3.5.0'
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    // Version 23+ is required
+    compile 'com.android.support:design:26.1.0'
 }
