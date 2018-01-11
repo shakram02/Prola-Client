@@ -6,34 +6,6 @@
     android:layout_height="match_parent"
     tools:context="shakram02.ahmed.prola.MainActivity">
 
-    <Button
-        android:id="@+id/connection_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="8dp"
-        android:text="@string/connect_button_text"
-        app:layout_constraintBottom_toBottomOf="@+id/space"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/space"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <ProgressBar
-        android:id="@+id/connect_spinner"
-        style="@android:style/Widget.DeviceDefault.Light.ProgressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:indeterminate="true"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/space"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/space"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <Space
         android:id="@+id/space"
         android:layout_width="8dip"
@@ -58,9 +30,48 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/connection_button"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
         tools:layout="@layout/fragment_capture">
 
     </fragment>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/connection_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:text="@string/connect_button_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <ProgressBar
+            android:id="@+id/connect_spinner"
+            style="@android:style/Widget.DeviceDefault.Light.ProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:indeterminate="true"
+            android:visibility="gone"
+            android:layout_toEndOf="@id/connection_button"
+            android:layout_alignBottom="@id/connection_button"
+            android:layout_alignTop="@id/connection_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>
