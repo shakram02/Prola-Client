@@ -92,8 +92,11 @@ class CodeSender(private val tcpPort: Int, private val udpPort: Int, private val
             }
 
             client.sendTCP(msg)
-            Log.i("BarcodeSender", "SENT:" + msg)
             onSent(msg)
+
+            if (BuildConfig.DEBUG) {
+                Log.i("BarcodeSender", "SENT:" + msg)
+            }
         }
     }
 }
