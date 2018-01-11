@@ -17,9 +17,11 @@ class CodeSender(private val tcpPort: Int, private val udpPort: Int, private val
     val onError = Event<String>()
     val onConnected = Event<String>()
     val onSent = Event<String>()
-
+    private lateinit var clientThread: Thread
     private val networkTask = Runnable {
-        client.start()
+        clientThread = Thread(client)
+        clientThread.start()
+
         val hostName = client.discoverHost(udpPort, timeoutMillis)
 
         if (!tryConnect(hostName)) {
@@ -36,7 +38,7 @@ class CodeSender(private val tcpPort: Int, private val udpPort: Int, private val
             Log.e("BarcodeSender", e.message)
             onError(e.message!!)
         } finally {
-            client.close()
+            clientThread.interrupt()
         }
     }
 
