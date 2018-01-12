@@ -2,6 +2,7 @@ package shakram02.ahmed.prola
 
 import android.app.AlertDialog
 import android.content.Context
+import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
@@ -20,6 +21,7 @@ import fsm.StateMachine
 
 class MainActivity : FragmentActivity(), ScanFragment.OnBarcodeScanListener {
     private lateinit var wifiManager: WifiManager
+    private lateinit var connectivityManager: ConnectivityManager
     private lateinit var wifiDialog: AlertDialog
 
     private val sender: CodeSender = CodeSender(TCP_PORT, UDP_PORT, 5000)
@@ -52,6 +54,7 @@ class MainActivity : FragmentActivity(), ScanFragment.OnBarcodeScanListener {
         setContentView(R.layout.activity_main)
 
         wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         wifiDialog = createWifiDialog(this, wifiManager)
 
         ButterKnife.bind(this)
@@ -89,8 +92,10 @@ class MainActivity : FragmentActivity(), ScanFragment.OnBarcodeScanListener {
     }
 
     private fun connect() {
-        if (!wifiManager.isWifiEnabled) {
-            showToast(this, "Couldn't connect, please enable WiFi")
+        val wifiInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
+
+        if (!wifiManager.isWifiEnabled || wifiInfo == null || !wifiInfo.isConnected) {
+            showToast(this, "Make sure you're connected to a WiFi local network")
         } else {
             scanMachine.acceptEvent(ReqConnect())
         }
