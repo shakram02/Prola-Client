@@ -39,7 +39,7 @@ class MainActivity : FragmentActivity(), ScanFragment.OnBarcodeScanListener {
 
     private lateinit var scannedVal: String
     private lateinit var scanMachine: StateMachine
-    private lateinit var scanFragment: ScanFragment
+    private lateinit var cameraScanFragment: CameraScanFragment
 
     @BindView(R.id.connection_button) lateinit var connectionButton: Button
     @BindView(R.id.connect_spinner) lateinit var connectionSpinner: ProgressBar
@@ -58,7 +58,7 @@ class MainActivity : FragmentActivity(), ScanFragment.OnBarcodeScanListener {
         wifiDialog = createWifiDialog(this, wifiManager)
 
         ButterKnife.bind(this)
-        scanFragment = supportFragmentManager.findFragmentById(R.id.scan_fragment) as ScanFragment
+        cameraScanFragment = supportFragmentManager.findFragmentById(R.id.scan_fragment) as CameraScanFragment
 
         scanMachine = buildScanMachine()
         sender.onConnected += { scanMachine.acceptEvent(Connect()) }
@@ -116,7 +116,7 @@ class MainActivity : FragmentActivity(), ScanFragment.OnBarcodeScanListener {
                     runOnUiThread {
                         connectionButton.text = getString(R.string.connect_button_text)
                         connectionButton.isEnabled = true
-                        scanFragment.disableScan()
+                        cameraScanFragment.disableScan()
                     }
                 }
 
@@ -144,7 +144,7 @@ class MainActivity : FragmentActivity(), ScanFragment.OnBarcodeScanListener {
                     action {
                         runOnUiThread {
                             // Stop spin waiter also
-                            scanFragment.enableScan()
+                            cameraScanFragment.enableScan()
                             connectionButton.text = getString(R.string.disconnect_button_text)
                             connectionButton.isEnabled = true
                             connectionSpinner.visibility = View.GONE

@@ -20,6 +20,7 @@ class CodeSender(private val tcpPort: Int, private val udpPort: Int, private val
 
     private val networkTask = Runnable {
         client.start()
+
         val hostName = client.discoverHost(udpPort, timeoutMillis)
 
         if (!tryConnect(hostName)) {
@@ -36,7 +37,7 @@ class CodeSender(private val tcpPort: Int, private val udpPort: Int, private val
             Log.e("BarcodeSender", e.message)
             onError(e.message!!)
         } finally {
-            client.close()
+            client.stop()
         }
     }
 
@@ -84,14 +85,18 @@ class CodeSender(private val tcpPort: Int, private val udpPort: Int, private val
     private fun senderLoop() {
         while (!Thread.interrupted()) {
             val msg = msgQueue.take()
+            val sent: Int = client.sendTCP(msg)
 
-            if (!client.isConnected) {
-                client.reconnect()
+            if (sent == 0) {
+                onError("$msg Wasn't sent")
+                Log.e("BarcodeSender", "Error sending msg")
+                return
             }
-
-            client.sendTCP(msg)
-            Log.i("BarcodeSender", "SENT:" + msg)
             onSent(msg)
+
+            if (BuildConfig.DEBUG) {
+                Log.i("BarcodeSender", "SENT:$msg, $sent")
+            }
         }
     }
 }
