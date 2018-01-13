@@ -14,13 +14,4 @@ import butterknife.BindView
 class ManualEntryFragment : ScanFragment(R.layout.fragment_manual_entry) {
     @BindView(R.id.manual_scan_frag_button) lateinit var scanButton: Button
 
-    override fun enableScan() {
-        scanButton.isEnabled = true
-    }
-
-    override fun disableScan() {
-        scanButton.isEnabled = false
-    }
-
-
 }
