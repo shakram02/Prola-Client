@@ -38,11 +38,6 @@ class ScanManagerFragment : Fragment(), ScanFragment.OnBarcodeScanListener {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        setChildrenAreEnabled(false, scanManagerLayout)
-    }
-
     override fun onBarcodeScan(barcode: String) {
         scanListener.onBarcodeScan(barcode) // Pass the event to parent
     }
@@ -53,22 +48,18 @@ class ScanManagerFragment : Fragment(), ScanFragment.OnBarcodeScanListener {
     }
 
     fun enableScan() {
-        setChildrenAreEnabled(true, scanManagerLayout)
+        setVisible(true)
         scanManagerLayout.isEnabled = true
     }
 
     fun disableScan() {
-        setChildrenAreEnabled(false, scanManagerLayout)
+        setVisible(false)
         scanManagerLayout.isEnabled = false
     }
 
-    private fun setChildrenAreEnabled(state: Boolean, viewGroup: ViewGroup) {
-        for (i in 0 until viewGroup.childCount) {
-            val child = viewGroup.getChildAt(i)
-            child.isEnabled = state
+    private fun setVisible(state: Boolean) {
+        val visibility = if (state) View.VISIBLE else View.INVISIBLE
 
-            // Do DFS
-            if (child is ViewGroup) setChildrenAreEnabled(state, child)
-        }
+        scanManagerLayout.visibility = visibility
     }
 }
