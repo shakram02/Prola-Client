@@ -6,4 +6,7 @@
 
     <string name="turn_on_flashlight">Turn on Flashlight</string>
     <string name="turn_off_flashlight">Turn off Flashlight</string>
+
+    <string name="manual_scan">Send</string>
+    <string name="barcode">Barcode</string>
 </resources>

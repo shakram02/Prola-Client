@@ -23,9 +23,6 @@ import com.google.zxing.client.android.Intents
  */
 class CameraScanFragment : ScanFragment(R.layout.fragment_camera_scan) {
 
-
-    @BindView(R.id.scan_frag_button) lateinit var scanButton: Button
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         // Scan cancelled
         if (data == null) {
@@ -50,13 +47,5 @@ class CameraScanFragment : ScanFragment(R.layout.fragment_camera_scan) {
         integrator.captureActivity = BarcodeScanActivity::class.java
         integrator.addExtra(Intents.Scan.ONE_D_MODE, true)
         integrator.initiateScan()
-    }
-
-    override fun enableScan() {
-        scanButton.isEnabled = true
-    }
-
-    override fun disableScan() {
-        scanButton.isEnabled = false
     }
 }

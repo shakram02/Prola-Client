@@ -43,9 +43,6 @@ abstract class ScanFragment(private val resId: Int) : Fragment() {
         unBinder!!.unbind()
     }
 
-    abstract fun enableScan()
-    abstract fun disableScan()
-
     interface OnBarcodeScanListener {
         fun onBarcodeScan(barcode: String)
     }
