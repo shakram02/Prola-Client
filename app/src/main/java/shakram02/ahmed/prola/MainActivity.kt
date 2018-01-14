@@ -88,10 +88,13 @@ class MainActivity : AppCompatActivity(), ScanFragment.OnBarcodeScanListener {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when (item!!.itemId) {
             R.id.connect_app_menu_button -> {
-                // TODO change icon and perform action
+                if (item.title == getString(R.string.disconnect_button_text)) {
+                    connect()
+                } else {
+                    disconnect()
+                }
                 true
             }
-
             else ->
                 super.onOptionsItemSelected(item)
         }
