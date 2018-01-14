@@ -39,7 +39,7 @@ class MainActivity : FragmentActivity(), ScanFragment.OnBarcodeScanListener {
 
     private lateinit var scannedVal: String
     private lateinit var scanMachine: StateMachine
-    private lateinit var cameraScanFragment: CameraScanFragment
+    private lateinit var scanManagerFragment: ScanManagerFragment
 
     @BindView(R.id.connection_button) lateinit var connectionButton: Button
     @BindView(R.id.connect_spinner) lateinit var connectionSpinner: ProgressBar
@@ -58,7 +58,7 @@ class MainActivity : FragmentActivity(), ScanFragment.OnBarcodeScanListener {
         wifiDialog = createWifiDialog(this, wifiManager)
 
         ButterKnife.bind(this)
-        cameraScanFragment = supportFragmentManager.findFragmentById(R.id.scan_fragment) as CameraScanFragment
+        scanManagerFragment = supportFragmentManager.findFragmentById(R.id.scan_fragment) as ScanManagerFragment
 
         scanMachine = buildScanMachine()
         sender.onConnected += { scanMachine.acceptEvent(Connect()) }
@@ -78,6 +78,7 @@ class MainActivity : FragmentActivity(), ScanFragment.OnBarcodeScanListener {
             Log.i("BarcodeScanner", "Scanned $barcode")
         }
 
+        // TODO: control can reach this location while being disconnected
         scannedVal = barcode
         scanMachine.acceptEvent(Scan())
     }
@@ -116,7 +117,7 @@ class MainActivity : FragmentActivity(), ScanFragment.OnBarcodeScanListener {
                     runOnUiThread {
                         connectionButton.text = getString(R.string.connect_button_text)
                         connectionButton.isEnabled = true
-                        cameraScanFragment.disableScan()
+                        scanManagerFragment.disableScan()
                     }
                 }
 
@@ -144,7 +145,7 @@ class MainActivity : FragmentActivity(), ScanFragment.OnBarcodeScanListener {
                     action {
                         runOnUiThread {
                             // Stop spin waiter also
-                            cameraScanFragment.enableScan()
+                            scanManagerFragment.enableScan()
                             connectionButton.text = getString(R.string.disconnect_button_text)
                             connectionButton.isEnabled = true
                             connectionSpinner.visibility = View.GONE
