@@ -6,7 +6,10 @@ import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
@@ -25,6 +28,7 @@ class MainActivity : AppCompatActivity(), ScanFragment.OnBarcodeScanListener {
     private lateinit var wifiDialog: AlertDialog
 
     private val sender: CodeSender = CodeSender(TCP_PORT, UDP_PORT, 5000)
+    private val connected: Boolean = false
 
     class Disconnected : BaseState()
     class Connected : BaseState()
@@ -52,6 +56,8 @@ class MainActivity : AppCompatActivity(), ScanFragment.OnBarcodeScanListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val mainToolbar = findViewById<View>(R.id.main_toolbar) as Toolbar
+        this.setSupportActionBar(mainToolbar)
 
         wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
         connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -72,13 +78,30 @@ class MainActivity : AppCompatActivity(), ScanFragment.OnBarcodeScanListener {
 
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.main_menu, menu)
+
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when (item!!.itemId) {
+            R.id.connect_app_menu_button -> {
+                // TODO change icon and perform action
+                true
+            }
+
+            else ->
+                super.onOptionsItemSelected(item)
+        }
+    }
 
     override fun onBarcodeScan(barcode: String) {
         if (BuildConfig.DEBUG) {
             Log.i("BarcodeScanner", "Scanned $barcode")
         }
 
-        // TODO: control can reach this location while being disconnected
         scannedVal = barcode
         scanMachine.acceptEvent(Scan())
     }
