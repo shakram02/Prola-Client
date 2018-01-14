@@ -5,7 +5,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.os.Bundle
-import android.support.v4.app.FragmentActivity
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.Button
@@ -19,7 +19,7 @@ import fsm.BaseState
 import fsm.StateMachine
 
 
-class MainActivity : FragmentActivity(), ScanFragment.OnBarcodeScanListener {
+class MainActivity : AppCompatActivity(), ScanFragment.OnBarcodeScanListener {
     private lateinit var wifiManager: WifiManager
     private lateinit var connectivityManager: ConnectivityManager
     private lateinit var wifiDialog: AlertDialog
