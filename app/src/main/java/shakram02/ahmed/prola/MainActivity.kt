@@ -89,9 +89,9 @@ class MainActivity : AppCompatActivity(), ScanFragment.OnBarcodeScanListener {
         return when (item!!.itemId) {
             R.id.connect_app_menu_button -> {
                 if (item.title == getString(R.string.disconnect_button_text)) {
-                    connect()
-                } else {
                     disconnect()
+                } else {
+                    connect()
                 }
                 true
             }
