@@ -12,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
@@ -22,16 +21,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/connection_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_toLeftOf="@id/connect_spinner"
-            android:layout_toStartOf="@id/connect_spinner"
-            android:text="@string/connect_button_text" />
 
         <ProgressBar
             android:id="@+id/connect_spinner"
