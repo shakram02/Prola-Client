@@ -1,6 +1,5 @@
 package shakram02.ahmed.prola
 
-import android.app.AlertDialog
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
@@ -16,7 +15,6 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import butterknife.BindView
 import butterknife.ButterKnife
-import butterknife.OnClick
 import fsm.BaseEvent
 import fsm.BaseState
 import fsm.StateMachine
@@ -25,7 +23,6 @@ import fsm.StateMachine
 class MainActivity : AppCompatActivity(), ScanFragment.OnBarcodeScanListener {
     private lateinit var wifiManager: WifiManager
     private lateinit var connectivityManager: ConnectivityManager
-    private lateinit var wifiDialog: AlertDialog
 
     private val sender: CodeSender = CodeSender(TCP_PORT, UDP_PORT, 5000)
 
@@ -80,7 +77,7 @@ class MainActivity : AppCompatActivity(), ScanFragment.OnBarcodeScanListener {
             makeToast(e)
         }
         scanMachine.initialize()
-        
+
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -106,15 +103,6 @@ class MainActivity : AppCompatActivity(), ScanFragment.OnBarcodeScanListener {
 
         scannedVal = barcode
         scanMachine.acceptEvent(Scan())
-    }
-
-    @OnClick(R.id.connection_button)
-    fun onConnectionButtonClicked() {
-        if (connectionButton.title == getString(R.string.disconnect_button_text)) {
-            disconnect()
-        } else {
-            connect()
-        }
     }
 
     private fun connect() {
