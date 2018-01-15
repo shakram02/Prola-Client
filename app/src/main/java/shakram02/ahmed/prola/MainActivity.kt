@@ -5,13 +5,13 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.Toast
 import butterknife.BindView
@@ -28,7 +28,6 @@ class MainActivity : AppCompatActivity(), ScanFragment.OnBarcodeScanListener {
     private lateinit var wifiDialog: AlertDialog
 
     private val sender: CodeSender = CodeSender(TCP_PORT, UDP_PORT, 5000)
-    private val connected: Boolean = false
 
     class Disconnected : BaseState()
     class Connected : BaseState()
@@ -45,7 +44,7 @@ class MainActivity : AppCompatActivity(), ScanFragment.OnBarcodeScanListener {
     private lateinit var scanMachine: StateMachine
     private lateinit var scanManagerFragment: ScanManagerFragment
 
-    @BindView(R.id.connection_button) lateinit var connectionButton: Button
+    lateinit var connectionButton: MenuItem
     @BindView(R.id.connect_spinner) lateinit var connectionSpinner: ProgressBar
 
     companion object {
@@ -56,14 +55,20 @@ class MainActivity : AppCompatActivity(), ScanFragment.OnBarcodeScanListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        ButterKnife.bind(this)
+
         val mainToolbar = findViewById<View>(R.id.main_toolbar) as Toolbar
         this.setSupportActionBar(mainToolbar)
+    }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.main_menu, menu)
+        connectionButton = menu.findItem(R.id.connect_app_menu_button)
+        connectionButton.title = getString(R.string.connect_button_text)
         wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
         connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        wifiDialog = createWifiDialog(this, wifiManager)
 
-        ButterKnife.bind(this)
         scanManagerFragment = supportFragmentManager.findFragmentById(R.id.scan_fragment) as ScanManagerFragment
 
         scanMachine = buildScanMachine()
@@ -75,13 +80,7 @@ class MainActivity : AppCompatActivity(), ScanFragment.OnBarcodeScanListener {
             makeToast(e)
         }
         scanMachine.initialize()
-
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.main_menu, menu)
-
+        
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -111,7 +110,7 @@ class MainActivity : AppCompatActivity(), ScanFragment.OnBarcodeScanListener {
 
     @OnClick(R.id.connection_button)
     fun onConnectionButtonClicked() {
-        if (connectionButton.text == getString(R.string.disconnect_button_text)) {
+        if (connectionButton.title == getString(R.string.disconnect_button_text)) {
             disconnect()
         } else {
             connect()
@@ -141,7 +140,8 @@ class MainActivity : AppCompatActivity(), ScanFragment.OnBarcodeScanListener {
             state(Disconnected()) {
                 action {
                     runOnUiThread {
-                        connectionButton.text = getString(R.string.connect_button_text)
+                        connectionButton.title = getString(R.string.connect_button_text)
+                        connectionButton.icon = ContextCompat.getDrawable(applicationContext, R.drawable.ic_phonelink_ring_black_24dp)
                         connectionButton.isEnabled = true
                         scanManagerFragment.disableScan()
                     }
@@ -172,7 +172,8 @@ class MainActivity : AppCompatActivity(), ScanFragment.OnBarcodeScanListener {
                         runOnUiThread {
                             // Stop spin waiter also
                             scanManagerFragment.enableScan()
-                            connectionButton.text = getString(R.string.disconnect_button_text)
+                            connectionButton.title = getString(R.string.disconnect_button_text)
+                            connectionButton.icon = ContextCompat.getDrawable(applicationContext, R.drawable.ic_phonelink_erase_black_24dp)
                             connectionButton.isEnabled = true
                             connectionSpinner.visibility = View.GONE
                         }
