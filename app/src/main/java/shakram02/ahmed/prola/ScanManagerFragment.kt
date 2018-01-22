@@ -49,17 +49,15 @@ class ScanManagerFragment : Fragment(), ScanFragment.OnBarcodeScanListener {
 
     fun enableScan() {
         setVisible(true)
-        scanManagerLayout.isEnabled = true
     }
 
     fun disableScan() {
         setVisible(false)
-        scanManagerLayout.isEnabled = false
     }
 
     private fun setVisible(state: Boolean) {
-        val visibility = if (state) View.VISIBLE else View.INVISIBLE
-
+        // View.GONE -> Don't take any space
+        val visibility = if (state) View.VISIBLE else View.GONE
         scanManagerLayout.visibility = visibility
     }
 }

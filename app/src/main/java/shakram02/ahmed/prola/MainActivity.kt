@@ -11,7 +11,6 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.ProgressBar
 import android.widget.Toast
 import butterknife.BindView
 import butterknife.ButterKnife
@@ -41,8 +40,8 @@ class MainActivity : AppCompatActivity(), ScanFragment.OnBarcodeScanListener {
     private lateinit var scanMachine: StateMachine
     private lateinit var scanManagerFragment: ScanManagerFragment
 
-    lateinit var connectionButton: MenuItem
-    @BindView(R.id.connect_spinner) lateinit var connectionSpinner: ProgressBar
+    private lateinit var connectionButton: MenuItem
+    @BindView(R.id.connect_spinner) lateinit var connectionSpinner: View
 
     companion object {
         private const val TCP_PORT = 60111
