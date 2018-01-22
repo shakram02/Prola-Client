@@ -13,7 +13,9 @@
         android:layout_alignTop="@id/manual_scan_frag_button"
         android:layout_toStartOf="@id/manual_scan_frag_button"
         android:hint="@string/barcode"
-        android:inputType="number" />
+        android:inputType="number"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@id/manual_scan_frag_button" />
 
     <Button
         android:id="@+id/manual_scan_frag_button"
@@ -21,5 +23,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:enabled="false"
-        android:text="@string/manual_scan" />
+        android:text="@string/manual_scan"
+        android:layout_alignParentRight="true" />
 </RelativeLayout>

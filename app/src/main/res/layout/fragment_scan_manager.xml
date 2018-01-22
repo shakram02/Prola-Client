@@ -21,4 +21,11 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         tools:layout="@layout/fragment_camera_scan" />
+
+    <FrameLayout
+        android:id="@+id/error_codes_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:visibility="gone" />
 </LinearLayout>
