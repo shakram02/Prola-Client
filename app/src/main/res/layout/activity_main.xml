@@ -34,5 +34,3 @@
         android:visibility="gone"
         tools:layout="@layout/fragment_scan_manager" />
 </LinearLayout>
-
-

@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import butterknife.BindView
 import shakram02.ahmed.prola.utils.FailedPacketAdapter
 
@@ -21,13 +22,13 @@ import shakram02.ahmed.prola.utils.FailedPacketAdapter
 class FailedCodesFragment : ScanFragment(R.layout.fragment_failed_codes) {
     @BindView(R.id.failed_codes_view) lateinit var barcodeRecyclerView: RecyclerView
 
-    private val barcodeList = mutableListOf<String>()
-    private val failedPacketAdapter = FailedPacketAdapter(barcodeList)
+    private val failedPacketAdapter = FailedPacketAdapter()
     private lateinit var fragmentView: View
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = super.onCreateView(inflater, container, savedInstanceState)
-        fragmentView = v!!
+        // Get fragment container from parent activity
+        fragmentView = activity.findViewById(R.id.error_codes_fragment_container)
 
         // Notify prent Activity when a code is pressed
         failedPacketAdapter.onBarcodeClicked += this::onBarcodeClicked
@@ -38,30 +39,24 @@ class FailedCodesFragment : ScanFragment(R.layout.fragment_failed_codes) {
         barcodeRecyclerView.addItemDecoration(DividerItemDecoration(activity,
                 DividerItemDecoration.VERTICAL))
 
-        return fragmentView
+        return v
     }
 
     fun addFailedCode(code: String) {
-        if (barcodeList.contains(code)) return
-
-        barcodeList.add(code)
+        if (!failedPacketAdapter.addUniqueBarcode(code)) return
 
         if (fragmentView.visibility != View.VISIBLE) {
             fragmentView.visibility = View.VISIBLE
         }
 
-        // The newly inserted code goes to the top of the list because it's the most recent
-        // item, the barcodeRecyclerView doesn't scroll up by default, so it needs to be told to do so
-        failedPacketAdapter.notifyItemInserted(0)
         barcodeRecyclerView.scrollToPosition(0)
     }
 
     private fun onBarcodeClicked(barcode: String) {
-        if (barcodeList.isEmpty()) {
+        if (failedPacketAdapter.itemCount == 0) {
             fragmentView.visibility = View.GONE
         }
 
-        barcodeList.remove(barcode)
         scanListener!!.onBarcodeScan(barcode)
     }
 }

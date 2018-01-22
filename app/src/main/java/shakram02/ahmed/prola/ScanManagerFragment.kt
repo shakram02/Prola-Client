@@ -19,6 +19,8 @@ class ScanManagerFragment : Fragment(), ScanFragment.OnBarcodeScanListener {
     private lateinit var scanListener: ScanFragment.OnBarcodeScanListener
     private var unBinder: Unbinder? = null
 
+    private val errorCodesFragment = FailedCodesFragment()
+
     @BindView(R.id.scan_manager) lateinit var scanManagerLayout: ViewGroup
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -26,6 +28,10 @@ class ScanManagerFragment : Fragment(), ScanFragment.OnBarcodeScanListener {
         // Inflate the layout for this fragment
         val view = inflater!!.inflate(R.layout.fragment_scan_manager, container, false)
         unBinder = ButterKnife.bind(this, view)
+
+        fragmentManager.beginTransaction()
+                .add(R.id.error_codes_fragment_container, errorCodesFragment)
+                .commit()
         return view
     }
 
@@ -36,6 +42,11 @@ class ScanManagerFragment : Fragment(), ScanFragment.OnBarcodeScanListener {
         } else {
             throw RuntimeException(context!!.toString() + " must implement OnBarcodeScanListener")
         }
+    }
+
+    fun onBarcodeScanFail(barcode: String) {
+        if (barcode.isEmpty()) return
+        errorCodesFragment.addFailedCode(barcode)
     }
 
     override fun onBarcodeScan(barcode: String) {
