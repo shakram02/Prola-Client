@@ -22,12 +22,10 @@
         android:layout_margin="8dp"
         tools:layout="@layout/fragment_camera_scan" />
 
-    <fragment
-        android:id="@+id/error_codes_fragment"
-        class="shakram02.ahmed.prola.FailedCodesFragment"
+    <FrameLayout
+        android:id="@+id/error_codes_fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:layout_weight="1"
         android:visibility="gone" />
 </LinearLayout>
