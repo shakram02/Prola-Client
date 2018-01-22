@@ -5,15 +5,10 @@
     android:orientation="vertical"
     tools:context="shakram02.ahmed.prola.FailedCodesFragment">
 
-    <Button
-        android:id="@+id/test_btn_add"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/failed_codes_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="8dp"
         android:scrollbars="vertical" />
-
 </LinearLayout>

@@ -33,16 +33,6 @@
         android:layout_margin="8dp"
         android:visibility="gone"
         tools:layout="@layout/fragment_scan_manager" />
-
-    <fragment
-        android:id="@+id/error_codes_fragment"
-        class="shakram02.ahmed.prola.FailedCodesFragment"
-        android:layout_width="match_parent"
-        android:layout_margin="8dp"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
-
 </LinearLayout>
 
 
