@@ -71,6 +71,12 @@ class MainActivity : AppCompatActivity(), ScanFragment.OnBarcodeScanListener {
         sender.onConnected += { scanMachine.acceptEvent(Connect()) }
         sender.onSent += { v -> makeToast("Sent " + v) }
         sender.onError += { e ->
+
+            if (scanMachine.getCurrentState() is Connected) {
+                // The last scanned value will contain the error
+                scanManagerFragment.onBarcodeScanFail(scannedVal)
+            }
+
             // Whenever an error occurs, change state
             scanMachine.acceptEvent(Error())
             makeToast(e)
