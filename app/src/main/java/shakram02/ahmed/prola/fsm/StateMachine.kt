@@ -52,6 +52,10 @@ class StateMachine private constructor(private val initialState: BaseState) {
         }
     }
 
+    fun getCurrentState(): BaseState {
+        return this.currentState.name
+    }
+
     companion object {
         fun buildStateMachine(initialStateName: BaseState, init: StateMachine.() -> Unit): StateMachine {
             val stateMachine = StateMachine(initialStateName)
