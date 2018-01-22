@@ -12,9 +12,9 @@ import java.util.*
 
 
 /**
- *
+ * Displays items in a given list in reversed order
  */
-class FailedPacketAdapter(private val items: Stack<String>) : RecyclerView.Adapter<FailedPacketAdapter.CodeHolder>() {
+class FailedPacketAdapter(private val items: List<String>) : RecyclerView.Adapter<FailedPacketAdapter.CodeHolder>() {
     val onBarcodeClicked = Event<String>()
 
     class CodeHolder(itemView: View, private val adapter: FailedPacketAdapter) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
@@ -37,7 +37,7 @@ class FailedPacketAdapter(private val items: Stack<String>) : RecyclerView.Adapt
         if (position >= items.count()) throw IndexOutOfBoundsException("Trying to access item at $position")
 
         val tvBarcode = holder.itemView.findViewById(R.id.barcode_text_view) as TextView
-        tvBarcode.text = items.peek()
+        tvBarcode.text = items[(items.size - 1) - position] // Because we're displaying an inverted list
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CodeHolder {
